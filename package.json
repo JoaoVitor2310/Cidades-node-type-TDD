@@ -1,0 +1,27 @@
+{
+  "name": "Cidades-node-type-TDD",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/JoaoVitor2310/Cidades-node-type-TDD.git",
+  "author": "João Vitor Gouveia <joaovitormatosgouveia@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify ./src/index.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "http-status-codes": "^2.2.0",
+    "yup": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/http-status-codes": "^1.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
+    "eslint": "^8.41.0",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.0.4"
+  }
+}
