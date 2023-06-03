@@ -2,4 +2,4 @@
 /build
 .env
 /coverage
-.sqlite
+*.sqlite
