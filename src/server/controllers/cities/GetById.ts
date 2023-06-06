@@ -2,6 +2,7 @@ import { Request, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup'; // Yup é uma biblioteca de validação de formulários
 import { validation } from '../../shared/middleware';
+import { CitiesProvider } from '../../database/providers/cities';
 
 interface IParamProps { // Tipo dos params da request
   id?: number;
@@ -14,20 +15,27 @@ export const getByIdValidation = validation((getSchema) => ({ // Middleware que 
 }));
 
 
-// 2 objetos vazios pq o ReqQuery tem que ficar na 4° posição, só passar o mouse em cima de Request para ver.
+// 2 objetos vazios pq o tipo ReqQuery tem que ficar na 4° posição, só passar o mouse em cima de Request para ver.
 export const getById = async (req: Request<IParamProps>, res: Response) => {
   
-  if(Number(req.params.id) === 99999){ // Útil somente enquanto não temos o banco de dados para comparar.
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+  if(!req.params.id){ // Checa se o parâmetro id veio na requisição
+    return res.status(StatusCodes.BAD_REQUEST).json({
       errors: {
-        default: 'Record not found'
+        default: 'The id parameter needs to be informed'
       }
     });
   }
+  
+  const result = await CitiesProvider.getById(req.params.id); // Faz a operação com o banco de dados utilizando os providers
+  
+  if(result instanceof Error){ // Se a resposta for um erro
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      errors: {
+        default: result.message // Responde com o erro
+      }
+    })
+  }
 
-  return res.status(StatusCodes.OK).json({
-    id: req.params.id,
-    name: 'Caxias do Sul',
-  });
+  return res.status(StatusCodes.OK).json(result); // Responde com a cidade
   
 };

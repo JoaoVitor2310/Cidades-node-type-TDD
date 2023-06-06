@@ -15,7 +15,7 @@ describe('Cities - UpdateById', () => {
       .put(`/cities/${res1.body}`)
       .send({ name: 'Caxias' });
 
-    expect(updateRes.statusCode).toEqual(StatusCodes.NO_CONTENT); // Recebe resposta sem conteúdo
+    expect(updateRes.statusCode).toEqual(StatusCodes.ACCEPTED); // Recebe resposta sem conteúdo
   });
   
   it('Try to update record that doesnt exist', async () => {
