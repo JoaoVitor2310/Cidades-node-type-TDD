@@ -16,7 +16,7 @@ export const deleteByIdValidation = validation((getSchema) => ({ // Middleware q
 
 // 2 objetos vazios pq o ReqQuery tem que ficar na 4° posição, só passar o mouse em cima de Request para ver.
 export const deleteById = async (req: Request<IParamProps>, res: Response) => {
-  
+   
   if(Number(req.params.id) === 99999){ // Útil somente enquanto não temos o banco de dados para comparar.
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errors: {

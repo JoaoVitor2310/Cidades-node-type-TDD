@@ -2,12 +2,13 @@ import { Request, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup'; // Yup é uma biblioteca de validação de formulários
 import { validation } from '../../shared/middleware';
+import { ICity } from '../../database/models';
 
 interface IParamProps { // Tipo dos params da request
   id?: number;
 }
 
-interface IBodyProps { // Tipo do body da request
+interface IBodyProps extends Omit<ICity, 'id'>{ // Tipo do body da request
   name: string;
 }
 

@@ -1,3 +1,4 @@
+// Define o ambiente que iremos utilizar
 import { knex } from 'knex';
 import { development, production, test } from './Environment';
 
