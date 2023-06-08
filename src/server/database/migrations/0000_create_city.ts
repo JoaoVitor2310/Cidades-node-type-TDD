@@ -17,7 +17,7 @@ export async function up(knex: Knex) {
 
 export async function down(knex: Knex) {
   return knex.schema.dropTable(ETableNames.city).then(() => { // Exclui a tabela de dados quando for solicitada.
-    console.log(`# Create table ${ETableNames.city}`);
+    console.log(`# Dropped table ${ETableNames.city}`);
   });
 }
 
