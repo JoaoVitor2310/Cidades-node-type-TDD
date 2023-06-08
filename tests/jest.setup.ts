@@ -5,12 +5,13 @@ import { Knex } from '../src/server/database/knex';
 
 // Inicia o banco na memória
 beforeAll(async () => {
-  await Knex.migrate.latest();
+  await Knex.migrate.latest(); // Faz o migrate
+  await Knex.seed.run(); // Faz o seed
 });
 
 // Encerra o banco da memória
 afterAll(async () => {
-  await Knex.destroy();
+  await Knex.destroy(); // Deleta o banco
 });
 
 
