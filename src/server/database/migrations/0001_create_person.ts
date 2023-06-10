@@ -10,7 +10,7 @@ export async function up(knex: Knex) {
       table.string('email').unique().notNullable(); // Coluna email será string, único e não nulo.
 
       table
-        .bigInteger('cidadeId') // Coluna cidadeId será inteiro, por causa do coluna id da cidade 
+        .bigInteger('cityId') // Coluna cidadeId será inteiro, por causa do coluna id da cidade 
         .index() // Será index de pesquisa
         .notNullable() // Não nulo.
         .references('id') // Referencia a coluna id da tabela de cidades

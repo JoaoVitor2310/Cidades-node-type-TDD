@@ -1,3 +1,5 @@
+//Retorna a pessoa pelo id
+
 import { Request, RequestHandler, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup'; // Yup é uma biblioteca de validação de formulários

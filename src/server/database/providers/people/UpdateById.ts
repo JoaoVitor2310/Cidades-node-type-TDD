@@ -10,12 +10,13 @@ export const updateById = async(id: number, person: Omit<IPerson, 'id'>): Promis
     .where('id', '=', person.cityId) // Procura se a cidade da pessoa existe, já que a pessao TEM que ter uma cidade cadastrada
     .count<[{ count: number }]>('* as count'); //Tipagem "estranha" por conta do knex
     
-    if(count === 0){
+    if(count === 0){ // Se for 0 é pq a pessoa não tem cidade cadastrada
       return new Error('A cidade usada no cadastro não foi encontrada.');
     }
     
     const result = await Knex(ETableNames.person) // Result irá receber o resultado da consulta no banco 'person'
     .update(person) // Atualiza no banco
+    .where('id', '=', id); // Onde o id da pessoa é igual o id da requisição
 
     if (result > 0) return;
 

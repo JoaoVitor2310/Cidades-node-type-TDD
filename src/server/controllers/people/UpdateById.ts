@@ -26,7 +26,6 @@ export const updateByIdValidation = validation((getSchema) => ({ // Middleware q
 
 // 2 objetos vazios pq o ReqQuery tem que ficar na 4° posição, só passar o mouse em cima de Request para ver.
 export const updateById = async (req: Request<IParamProps, {}, IBodyProps>, res: Response) => {
-  
   if(!req.params.id){ // Checa se o parâmetro id veio na requisição
     return res.status(StatusCodes.BAD_REQUEST).json({
       errors: {

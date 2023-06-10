@@ -10,7 +10,7 @@
     "test": "jest",
     "knex:migrate": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:latest",
     "knex:rollback": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback",
-    "knex:rollback-all": "knex --knexfile ./src/server/database/knex/Environment.ts knex:rollback --all",
+    "knex:rollback-all": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback --all",
     "knex:seed": "knex --knexfile ./src/server/database/knex/Environment.ts seed:run"
   },
   "dependencies": {

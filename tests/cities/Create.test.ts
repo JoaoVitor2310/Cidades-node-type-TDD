@@ -8,7 +8,6 @@ describe('create - city', () => {
         name: 'Balneário Camboriú'
       });
 
-    // expect(res.body).toHaveProperty('msg');
     expect(res.statusCode).toEqual(StatusCodes.CREATED); // C´ódigo de criação 201
     expect(typeof res.body).toEqual('number'); // O id será devolvido, por isso o number
   });
