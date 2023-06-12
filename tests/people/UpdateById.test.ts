@@ -3,11 +3,26 @@ import { StatusCodes } from 'http-status-codes';
 
 describe('People - UpdateById', () => {
 
+  let accessToken = '';
+
+  beforeAll(async () => { // Cria o usuário para testar as rotas protegidas
+    const email = 'updateById-people@gmail.com';
+    const password = '1234567';
+    await testServer.post('/signUp').send({
+      name: 'Test',
+      email,
+      password
+    });
+    const signInRes = await testServer.post('/signIn').send({ email, password });
+    accessToken = signInRes.body.accessToken;
+  });
+
   let cityId: number | undefined = undefined;
 
   beforeAll(async () => { // Antes de testar, vamos criar a cidade que terá o cityId(obrigatório) da pessoa
     const cityRes = await testServer
       .post('/cities')
+      .set({ Authorization: `Bearer ${accessToken}` }) // Insere o token de login nos headers
       .send({ name: 'city to test' });
 
     cityId = cityRes.body;
@@ -17,6 +32,7 @@ describe('People - UpdateById', () => {
 
     const res1 = await testServer
       .post('/people')
+      .set({ Authorization: `Bearer ${accessToken}` }) // Insere o token de login nos headers
       .send({
         cityId,
         email: 'abc@gmail.com',
@@ -27,6 +43,7 @@ describe('People - UpdateById', () => {
 
     const updateRes = await testServer
       .put(`/people/${res1.body}`)
+      .set({ Authorization: `Bearer ${accessToken}` }) // Insere o token de login nos headers
       .send({
         cityId,
         email: 'abcdefghi@gmail.com',
@@ -40,6 +57,7 @@ describe('People - UpdateById', () => {
 
     const res1 = await testServer
       .put('/people/99999')
+      .set({ Authorization: `Bearer ${accessToken}` }) // Insere o token de login nos headers
       .send({ // Envia os dados para criar um exemplo e editar depois
         cityId,
         email: 'abcde@gmail.com',
