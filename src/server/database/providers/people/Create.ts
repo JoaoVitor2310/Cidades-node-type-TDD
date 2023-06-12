@@ -11,7 +11,8 @@ export const create = async (person: Omit<IPerson, 'id'>): Promise<number | Erro
       .count<[{ count: number }]>('* as count'); //Tipagem "estranha" por conta do knex
 
 
-    if(count === 0){
+    console.log(count);
+    if (count === 0) {
       return new Error('A cidade usada no cadastro não foi encontrada.');
     }
 

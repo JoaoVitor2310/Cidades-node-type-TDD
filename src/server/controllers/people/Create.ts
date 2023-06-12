@@ -10,7 +10,7 @@ interface IBodyProps extends Omit<IPerson, 'id'>{} // Tipo do body da request. O
 export const createValidation = validation((getSchema) => ({ // Middleware que irá validar body, params e query.
   body: getSchema<IBodyProps>(yup.object().shape({ //Shape dos campos desejados
     email: yup.string().required().email(),
-    cityId: yup.number().required().integer(),
+    cityId: yup.number().required().integer().moreThan(0),
     fullName: yup.string().required().min(3),
   }))
 }));

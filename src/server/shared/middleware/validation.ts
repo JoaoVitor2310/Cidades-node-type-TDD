@@ -21,7 +21,7 @@ export const validation: TValidation = (getAllSchemas) => async (req, res, next)
 
   const errorsResult: Record<string, Record<string, string>> = {}; // Esse objeto será composto de um objeto de objetos, por isso os Records  
   
-  Object.entries(schemas).forEach(([key, schema]) => { // Object.entrie transforma um objeto arrays, cada "linha" será um array: [chave, valor]; 
+  Object.entries(schemas).forEach(([key, schema]) => { // Object.entries transforma um objeto de arrays, cada "linha" será um array: [chave, valor]; 
     try {
       schema.validateSync(req[key as TProperty], { abortEarly: false }); // validateSync é do yup para validar no formato que definimos.
       const { name } = req.body;
