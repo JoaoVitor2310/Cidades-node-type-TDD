@@ -13,7 +13,7 @@
     "knex:rollback-all": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback --all",
     "knex:seed": "knex --knexfile ./src/server/database/knex/Environment.ts seed:run",
     "production": "node ./build/index.js",
-    "postinstall": "tsc"
+    "preproduction": "tsc"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

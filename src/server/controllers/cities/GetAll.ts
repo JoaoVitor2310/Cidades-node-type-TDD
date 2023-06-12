@@ -25,7 +25,7 @@ export const getAllValidation = validation((getSchema) => ({ // Middleware que i
 export const getAll = async (req: Request<{}, {}, {}, IQueryProps>, res: Response) => {
 
   // Faz a chamada no provider passando os valores recebidos, se não receber um valor, envia um padrão.
-  const result = await CitiesProvider.getAll(req.query.page || 1, req.query.limit || 10, req.query.filter || '', Number(req.query.id));
+  const result = await CitiesProvider.getAll(req.query.page || 1, req.query.limit || 10, req.query.filter || '', Number(req.query.id) || 0);
 
   const count = await CitiesProvider.count(req.query.filter); // Identifica quantos resultados encontrou, para mostrar ao usuário
 
