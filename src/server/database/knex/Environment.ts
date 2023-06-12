@@ -34,12 +34,6 @@ export const production: Knex.Config = {
   seeds: { // Arquivo de configuração de seeds
     directory: path.resolve(__dirname, '..', 'seeds'),
   },
-  pool: { // Configuração extra pro sqlite aceitar forign keys
-    afterCreate: (connection: any, done: Function) => {
-      connection.run('PRAGMA foreign_keys = ON');
-      done();
-    }
-  },
   connection: { // Arquivo de configuração de conexão
     host: process.env.DATABASE_HOST, // Endereço do servidor
     user: process.env.DATABASE_USER, // Usuário administrador

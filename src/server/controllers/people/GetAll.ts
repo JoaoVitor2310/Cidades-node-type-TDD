@@ -29,13 +29,13 @@ export const getAll = async (req: Request<{}, {}, {}, IQueryProps>, res: Respons
 
   if (result instanceof Error) { // Verifica se deu erro na consulta
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      errprs: {
+      errors: {
         default: result.message
       }
     })
   } else if (count instanceof Error) { // Verifica se deu erro na consulta de todos os resultados
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      errprs: {
+      errors: {
         default: count.message
       }
     })
