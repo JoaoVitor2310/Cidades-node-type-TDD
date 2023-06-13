@@ -7,7 +7,6 @@ export const count = async (filter = ''): Promise<number | Error> => { // Calcul
   try {
     const [{ count }] = await Knex(ETableNames.city) // Conta todos os dados da tabela e guarda em count, por isso o: * as count
       .where('name', 'like', `%${filter}%`) // Onde o nome for like(contém) o filtro de pesquisa da requisição
-      .select('*') // Seleciona todas as colunas
       .count<[{ count: number }]>('* as count'); //Tipagem "estranha" por conta do knex
 
     if (Number.isInteger(Number(count))) return Number(count);
