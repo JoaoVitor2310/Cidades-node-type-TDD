@@ -8,7 +8,7 @@ interface IJWTData {
 export const signIn = (data: IJWTData): string | 'JWT_SECRET_NOT_FOUND' => { // Gera o token
   if(!process.env.JWT_SECRET) return 'JWT_SECRET_NOT_FOUND'; // Se não tiver o secret, retorna uma mensagem
 
-  return jwt.sign(data, process.env.JWT_SECRET, {expiresIn: '24h'}); // Gera o token, expirando em 24 horas
+  return jwt.sign(data, process.env.JWT_SECRET, {expiresIn: '7d'}); // Gera o token, expirando em 7 dias
 }
 
 

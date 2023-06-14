@@ -14,7 +14,7 @@ export const getAllValidation = validation((getSchema) => ({ // Middleware que i
   query: getSchema<IQueryProps>(yup.object().shape({ //Shape dos campos desejados
     page: yup.number().optional().moreThan(0),
     limit: yup.number().optional().moreThan(0),
-    filter: yup.string().optional(),
+    filter: yup.string().optional().default(''),
   }))
 }));
 
