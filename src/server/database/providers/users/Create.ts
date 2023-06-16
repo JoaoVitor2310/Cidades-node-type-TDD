@@ -18,10 +18,10 @@ export const create = async(user: Omit<IUser, 'id'>): Promise< number | Error > 
       return result;
     }
     
-    return new Error('Erro ao cadastrar o registro');
+    return new Error('Email já cadastrado, tente novamente.');
   } catch (error) {
     console.log(error);
-    return new Error('Erro ao cadastrar o registro');
+    return new Error('Email já cadastrado, tente novamente.');
   }
   
 }

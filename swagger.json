@@ -1,0 +1,394 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de cadastro de cidades",
+    "description": "API com CRUD completo para cadastro de cidades, utilizando Node, Typescript, Jest, Knex e PostgreSQL. <br> OBS: As rotas necessitam de autenticação, utilize a rota de login para gerar o token e inserir no 'Authorize'",
+    "constact": {
+      "email": "joaovitormatosgouveia@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3333",
+      "description": "DEVELOPMENT API"
+    },
+    {
+      "url": "https://api-rest-cidades-node-type-tdd-oti4j.ondigitalocean.app/",
+      "description": "PRODUCTION API"
+    }
+  ],
+  "paths": {
+    "/signUp": {
+      "post": {
+        "summary": "Registers an user in the database",
+        "description": "Should register a new user",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserToSignUp"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "Swagger User",
+                    "email": "swaggeruser@gmail.com",
+                    "password": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created ",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Email already used",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/signIn": {
+      "post": {
+        "summary": "Logs  in an user in the database",
+        "description": "Should login a user already created",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserToLogin"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "email": "swaggeruser@gmail.com",
+                    "password": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User created ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Wrong email or password.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cities": {
+      "post": {
+        "summary": "Registers a city in the database",
+        "description": "Should register a city",
+        "tags": [
+          "Cities"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/City"
+              },
+              "examples": {
+                "city": {
+                  "value": {
+                    "name": "Balneário Camboriú"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "City created.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "parameters": {
+          "- in": "query",
+          "name": "page",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        "summary": "Get all cities from database",
+        "description": "Should return all city records",
+        "tags": [
+          "Cities"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "City created.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people": {
+      "post": {
+        "summary": "Register a city in the database",
+        "description": "Should register a city",
+        "tags": [
+          "Cities"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/City"
+              },
+              "examples": {
+                "city": {
+                  "value": {
+                    "name": "Balneário Camboriú"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized, you should login first",
+            "content": {
+              "application/json": {
+                "errors": {
+                  "default": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "City created ",
+            "content": {
+              "application/json": {
+                "id": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserToSignUp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "UserToLogin": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "City": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "People": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "cityId": {
+            "type": "number"
+          },
+          "fullName": {
+            "type": "string"
+          }
+        }
+      },
+      "DefaultErrors": {
+        "type": "object",
+        "properties": {
+          "default": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
