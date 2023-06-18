@@ -203,14 +203,7 @@
         }
       },
       "get": {
-        "parameters": {
-          "- in": "query",
-          "name": "page",
-          "schema": {
-            "type": "integer"
-          }
-        },
-        "summary": "Get all cities from database",
+        "summary": "Gets all or searched cities from database",
         "description": "Should return all city records",
         "tags": [
           "Cities"
@@ -220,13 +213,58 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of the list item"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search string"
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Id from request"
+          }
+        ],
         "responses": {
-          "201": {
-            "description": "City created.",
+          "200": {
+            "description": "Cities found.",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
-                  "type": "integer"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -253,6 +291,149 @@
           },
           "500": {
             "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cities/{id}": {
+      "get": {
+        "summary": "Gets city by id",
+        "description": "Should return a city by its id",
+        "tags": [
+          "Cities"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "City id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "City found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "city": {
+                    "value": {
+                      "id": 2,
+                      "name": "Balneário Camboriú"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes city by id",
+        "description": "Should delete a city by its id",
+        "tags": [
+          "Cities"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "City id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "City deleted, no content in response."
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "City not found.",
             "content": {
               "application/json": {
                 "schema": {

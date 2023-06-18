@@ -21,7 +21,7 @@ export const deleteById = async (req: Request<IParamProps>, res: Response) => {
   if(!req.params.id){ // Checa se o parâmetro id veio na requisição
     return res.status(StatusCodes.BAD_REQUEST).json({
       errors: {
-        default: 'The id parameter needs to be informed'
+        default: 'Erro na requisição'
       }
     });
   }
