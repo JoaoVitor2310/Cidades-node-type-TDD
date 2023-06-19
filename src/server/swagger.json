@@ -1,0 +1,981 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de cadastro de cidades",
+    "description": "API com CRUD completo para cadastro de cidades, utilizando Node, Typescript, Jest, Knex e PostgreSQL. <br> **OBS:** As rotas necessitam de autenticação, utilize a rota de login para gerar o token e inserir no 'Authorize'. <br> **Sobre mim:** https://docs.google.com/document/d/1tQtWbZDr6f-rfCiAqEb4TAF8X9HXWyeYwkPp74qjDoQ/edit?usp=sharing ",
+    "constact": {
+      "email": "joaovitormatosgouveia@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api-rest-cidades-node-type-tdd-oti4j.ondigitalocean.app/",
+      "description": "PRODUCTION API"
+    },
+    {
+      "url": "http://localhost:3333",
+      "description": "DEVELOPMENT API"
+    }
+  ],
+  "paths": {
+    "/signUp": {
+      "post": {
+        "summary": "Registers an user in the database",
+        "description": "Should register a new user",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserToSignUp"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "Swagger User",
+                    "email": "swaggeruser@gmail.com",
+                    "password": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created ",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Email already used or internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/signIn": {
+      "post": {
+        "summary": "Logs  in an user in the database",
+        "description": "Should login a user already created",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserToLogin"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "email": "swaggeruser@gmail.com",
+                    "password": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User created ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Wrong email , password or internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cities": {
+      "post": {
+        "summary": "Registers a city in the database",
+        "description": "Should register a city",
+        "tags": [
+          "Cities"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/City"
+              },
+              "examples": {
+                "city": {
+                  "value": {
+                    "name": "Balneário Camboriú"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "City created.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Gets all or searched cities from database",
+        "description": "Should return all cities records",
+        "tags": [
+          "Cities"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of items on page"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search string"
+          },
+          {
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Id from request"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cities found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "City/cities not found or internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cities/{id}": {
+      "get": {
+        "summary": "Gets city by id",
+        "description": "Should return a city by its id",
+        "tags": [
+          "Cities"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "City id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "City found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "City not found or internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes city by id",
+        "description": "Should delete a city by its id",
+        "tags": [
+          "Cities"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "City id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "City deleted, no content in response body."
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "City not found or internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Updates city by id",
+        "description": "Should update a city by its id",
+        "tags": [
+          "Cities"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "City id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/City"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "name": "Updated Balneário Camboriú"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "City updated, no content in response body."
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "City not found or internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people": {
+      "post": {
+        "summary": "Registers a person with at least one city.",
+        "description": "Should register a person with your city.",
+        "tags": [
+          "People"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/People"
+              },
+              "examples": {
+                "person": {
+                  "value": {
+                    "cityId": 96,
+                    "email": "clark@gmail.com",
+                    "fullName": "Clark Kent"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registered person.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Person already registered, person's city id not found or internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Gets all or searched people from database.",
+        "description": "Should return all people records.",
+        "tags": [
+          "People"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of items on page"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "People found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "fullName": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "cityId": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Person not found or internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people/{id}": {
+      "get": {
+        "summary": "Gets person by id",
+        "description": "Should return a person by its id",
+        "tags": [
+          "People"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Person's id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Person found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "fullName": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "cityId": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Person not found or internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes person by id",
+        "description": "Should delete a person by its id",
+        "tags": [
+          "People"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Person id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Person deleted, no content in response body."
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Person not found or internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Updates person by id",
+        "description": "Should update a person by its id",
+        "tags": [
+          "People"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Person id",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/People"
+              },
+              "examples": {
+                "person": {
+                  "value": {
+                    "cityId": 97,
+                    "email": "brucewayne@gmail.com",
+                    "fullName": "Bruce Wayne"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Person updated, updated person is sent at the response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "fullName": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "cityId": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, take a look at the syntax.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, you should login first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Person not found or internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrors"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserToSignUp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "UserToLogin": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "City": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "People": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "cityId": {
+            "type": "number"
+          },
+          "fullName": {
+            "type": "string"
+          }
+        }
+      },
+      "DefaultErrors": {
+        "type": "object",
+        "properties": {
+          "default": {
+            "type": "object",
+            "properties": {
+              "errors": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

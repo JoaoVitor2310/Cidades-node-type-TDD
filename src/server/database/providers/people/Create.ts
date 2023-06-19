@@ -10,8 +10,6 @@ export const create = async (person: Omit<IPerson, 'id'>): Promise<number | Erro
       .where('id', '=', person.cityId) // Procura se a cidade da pessoa existe, já que a pessao TEM que ter uma cidade cadastrada
       .count<[{ count: number }]>('* as count'); //Tipagem "estranha" por conta do knex
 
-
-    console.log(count);
     if (count === 0) {
       return new Error('A cidade usada no cadastro não foi encontrada.');
     }
