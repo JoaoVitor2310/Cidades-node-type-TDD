@@ -9,5 +9,3 @@
 
 ### Documentação SWAGGER: Está na página principal da API  
 
-## EM BREVE: 
-Mais detalhes de como foi desenvolver.  
